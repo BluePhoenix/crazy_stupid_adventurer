@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var brickView: UIView!
     @IBOutlet weak var doorView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var messageLabel: UILabel!
@@ -27,38 +28,75 @@ class ViewController: UIViewController {
     }
 
     
-    @IBAction func openPressed(sender: AnyObject) {
-        if imageView.image == UIImage(named: "s1doorclosed"){
-          imageView.image = UIImage(named: "s1dooropen")
-        }else {
-            imageView.image = UIImage(named: "s1doorclosed")
+//    @IBAction func openPressed(sender: AnyObject) {
+//        if imageView.image == UIImage(named: "s11"){
+//          imageView.image = UIImage(named: "s12")
+//        }else {
+//            imageView.image = UIImage(named: "s11")
+//        }
+//    }
+    @IBAction func brickTapped(sender: AnyObject) {
+        print("brick tapped")
+        if imageView.image == UIImage(named: "s1Start"){
+            let alertController = UIAlertController(title: "Brick", message: "Select an action", preferredStyle: .Alert)
+            
+            let hitAction = UIAlertAction(title: "Punch", style: UIAlertActionStyle.Default){ UIAlertAction in
+            self.messageLabel.text = "your hand is likely broken way to go"
+            }
+            
+            let pullAction = UIAlertAction(title: "Pull", style: UIAlertActionStyle.Default){ UIAlertAction in
+                self.messageLabel.text = "the loose brick is removed"
+                self.imageView.image = UIImage(named: "s1BrickOpened")
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
+                UIAlertAction in
+                
+            }
+            alertController.addAction(hitAction)
+            alertController.addAction(pullAction)
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
+        if imageView.image == UIImage(named: "s1BrickOpened"){
+            let alertController = UIAlertController(title: "Brick", message: "Select an action", preferredStyle: .Alert)
+            
+            let takeAction = UIAlertAction(title: "Take Key", style: UIAlertActionStyle.Default){ UIAlertAction in
+                self.messageLabel.text = "You take the key"
+               self.imageView.image = UIImage(named: "s1keyTaken")
+            }
+            alertController.addAction(takeAction)
+           
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+
     }
     @IBAction func doorViewTapped(sender: AnyObject) {
-        if imageView.image == UIImage(named: "s1doorclosed"){
-        let alertController = UIAlertController(title: "Door", message: "Select an action", preferredStyle: .ActionSheet)
+        if imageView.image == UIImage(named: "s1Start"){
+        let alertController = UIAlertController(title: "Door", message: "Select an action", preferredStyle: .Alert)
         
         // Create the actions
         let openAction = UIAlertAction(title: "Open", style: UIAlertActionStyle.Default) {
             UIAlertAction in
             //self.openPressed(sender)
             self.messageLabel.text = "the door is locked"
-            NSLog("OK Pressed")
+           
         }
         let knockAction = UIAlertAction(title: "Knock", style: UIAlertActionStyle.Default) {
             UIAlertAction in
             self.messageLabel.text = "no one answers"
-            NSLog("Knock Pressed")
+          
         }
         let kickAction = UIAlertAction(title: "Kick in", style: UIAlertActionStyle.Default) {
             UIAlertAction in
-            self.openPressed(sender)
+            self.imageView.image = UIImage(named: "s1DoorKickedOpen")
             self.messageLabel.text = "you kick the door in. that was a bit much dont you think?"
-            NSLog("Knock Pressed")
+           
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
             UIAlertAction in
-            NSLog("Cancel Pressed")
+            
         }
         
         // Add the actions
@@ -73,10 +111,20 @@ class ViewController: UIViewController {
         
         //openPressed(sender)
         }
-        if imageView.image == UIImage(named: "s1dooropen"){
+        
+        if imageView.image == UIImage(named: "s1DoorUnlocked"){
+            performSegueWithIdentifier("toScene2", sender: self)
+        }
+        if imageView.image == UIImage(named: "s1keyTaken"){
+            imageView.image = UIImage(named: "s1DoorUnlocked")
+            self.messageLabel.text = "You have unlocked the door"
+        }
+        if imageView.image == UIImage(named: "s1DoorKickedOpen"){
             imageView.image = UIImage(named: "hades")
             self.messageLabel.text = "you are dead. you have to be a moron to break and enter at death castle"
         }
+        
+        
     }
 }
 
